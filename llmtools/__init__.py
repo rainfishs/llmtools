@@ -1,2 +1,1 @@
-def hello_world():
-    return "Hello, world!"
+from .openai import gpt as openai_gpt
