@@ -15,14 +15,14 @@ from .messages import ChatCompletionMessages
 
 class ChatBot:
 
-    def __init__(self) -> None:
-        self.client = OpenAI()
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self.client = OpenAI(*args, **kwargs)
 
     @overload
     def ask(
         self,
         prompt: Iterable[ChatCompletionMessages],
-        model: ChatModel,
+        model: ChatModel | str,
         temperature: float,
         stream: Literal[True],
         **kwargs: Any,
@@ -33,7 +33,7 @@ class ChatBot:
     def ask(
         self,
         prompt: Iterable[ChatCompletionMessages],
-        model: ChatModel,
+        model: ChatModel | str,
         temperature: float,
         stream: Literal[False],
         **kwargs: Any,
@@ -43,7 +43,7 @@ class ChatBot:
     def ask(
         self,
         prompt: Iterable[ChatCompletionMessages],
-        model: ChatModel,
+        model: ChatModel | str,
         temperature: float = 0,
         stream: bool = False,
         **kwargs: Any,
