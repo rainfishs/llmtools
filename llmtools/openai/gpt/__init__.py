@@ -1,2 +1,2 @@
 from .messages import ChatCompletionMessages, SystemMessage, UserMessage, AssistantMessage, ToolMessage
-from .openai_llm import LLM
+from .openai_llm import ChatBot
