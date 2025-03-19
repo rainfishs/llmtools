@@ -8,7 +8,7 @@ INSTALL_REQUIRES = [s.strip() for s in requirements.split("\n")]
 
 setup(
     name="llmtools",  # Package name
-    version="0.0.3",  # Version number
+    version="0.0.4",  # Version number
     packages=find_packages(),  # Automatically find packages in the directory
     install_requires=INSTALL_REQUIRES,  # Dependencies
     author="rainfishs",  # Your name
