@@ -1,13 +1,11 @@
 """
-使用openai的gpt模型
+使用 Openai 的 GPT 模型
 """
 
-import json
-from typing import Any, Iterable, Union, cast, overload, Literal
+from typing import Any, Iterable, Union, overload, Literal
 
 from openai import OpenAI, Stream
-from openai.types.chat import (ChatCompletionChunk, ChatCompletionMessageParam,
-                               ChatCompletion)
+from openai.types.chat import ChatCompletionChunk
 from openai.types.shared import ChatModel
 
 from .messages import ChatCompletionMessages
@@ -21,7 +19,6 @@ class ChatBot(OpenAI):
         prompt: Iterable[ChatCompletionMessages],
         model: ChatModel | str,
         *,
-        temperature: float = 0,
         stream: Literal[True],
         **kwargs: Any,
     ) -> Iterable[str]:
@@ -33,7 +30,6 @@ class ChatBot(OpenAI):
         prompt: Iterable[ChatCompletionMessages],
         model: ChatModel | str,
         *,
-        temperature: float = 0,
         stream: Literal[False] = False,
         **kwargs: Any,
     ) -> str:
@@ -43,29 +39,22 @@ class ChatBot(OpenAI):
         self,
         prompt: Iterable[ChatCompletionMessages],
         model: ChatModel | str,
-        temperature: float = 0,
         stream: bool = False,
         **kwargs: Any,
     ) -> Union[str, Iterable[str]]:
-        completion = self.chat.completions.create(
-            model=model,
-            messages=cast(Iterable[ChatCompletionMessageParam],
-                          map(dict, prompt)),
-            temperature=temperature,
-            stream=stream,
-            **kwargs,
-        )
-        if isinstance(completion, Stream):
-            # return completion
-            return self.stream_to_str(completion)
-
-        assert isinstance(completion, ChatCompletion)
-        return completion.choices[0].message.model_dump().get(
-            "content", "error")
+        kwargs["model"] = model
+        kwargs["messages"] = map(dict, prompt)
+        if stream:
+            return self.stream_to_str(
+                self.chat.completions.create(stream=stream, **kwargs))
+        else:
+            return (self.chat.completions.create(
+                stream=stream,
+                **kwargs,
+            )).choices[0].message.model_dump().get("content", "error")
 
     # stream 解包成 iterable[str]
     @staticmethod
     def stream_to_str(stream: Stream[ChatCompletionChunk]) -> Iterable[str]:
         for chunk in stream:
-            # yield chunk.choices[0].model_dump().get("content", "error")
             yield chunk.choices[0].delta.content or ""
