@@ -13,10 +13,7 @@ from openai.types.shared import ChatModel
 from .messages import ChatCompletionMessages
 
 
-class ChatBot:
-
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        self.client = OpenAI(*args, **kwargs)
+class ChatBot(OpenAI):
 
     @overload
     def ask(
@@ -48,7 +45,7 @@ class ChatBot:
         stream: bool = False,
         **kwargs: Any,
     ) -> Union[str, Iterable[str]]:
-        completion = self.client.chat.completions.create(
+        completion = self.chat.completions.create(
             model=model,
             messages=cast(Iterable[ChatCompletionMessageParam],
                           map(dict, prompt)),
