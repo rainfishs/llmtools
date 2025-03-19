@@ -20,7 +20,8 @@ class ChatBot(OpenAI):
         self,
         prompt: Iterable[ChatCompletionMessages],
         model: ChatModel | str,
-        temperature: float,
+        *,
+        temperature: float = 0,
         stream: Literal[True],
         **kwargs: Any,
     ) -> Iterable[str]:
@@ -31,8 +32,9 @@ class ChatBot(OpenAI):
         self,
         prompt: Iterable[ChatCompletionMessages],
         model: ChatModel | str,
-        temperature: float,
-        stream: Literal[False],
+        *,
+        temperature: float = 0,
+        stream: Literal[False] = False,
         **kwargs: Any,
     ) -> str:
         ...
