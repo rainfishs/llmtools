@@ -1,5 +1,5 @@
 import inspect
-from typing import Iterable, List, Literal, overload
+from typing import Any, Iterable, List, Literal, overload
 from .messages import ChatCompletionMessages, UserMessage, AssistantMessage
 from .openai_llm import ChatBot
 from openai.types.shared import ChatModel
@@ -26,21 +26,27 @@ class ConversationManager():
         self.history = []
 
     @overload
-    def __call__(self, input: str, stream: Literal[False] = False) -> str:
+    def __call__(self,
+                 input: str,
+                 stream: Literal[False] = False,
+                 **kwargs: Any) -> str:
         ...
 
     @overload
-    def __call__(self, input: str, stream: Literal[True]) -> Iterable[str]:
+    def __call__(self, input: str, stream: Literal[True],
+                 **kwargs: Any) -> Iterable[str]:
         ...
 
     def __call__(self,
                  input: str,
-                 stream: bool = False) -> str | Iterable[str]:
+                 stream: bool = False,
+                 **kwargs: Any) -> str | Iterable[str]:
         self.history.append(UserMessage(content=input))
         if stream:
             response = self.bot.ask(self.history,
                                     model=self.model,
-                                    stream=True)
+                                    stream=True,
+                                    **kwargs)
             response = self.interceptsteam(response)
             return response
         response = self.bot.ask(self.history, model=self.model)
