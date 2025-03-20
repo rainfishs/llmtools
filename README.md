@@ -83,3 +83,27 @@ except KeyboardInterrupt:
     print("Bye!")
 
 ```
+
+### ChatBot with conversation manager
+```python
+from llmtools import ChatBot, ConversationManager
+
+bot = ChatBot()
+model = "gpt-3.5-turbo"
+
+chat = ConversationManager(bot, model=model)
+
+try:
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == "exit":
+            break
+        print("Bot: ", end="")
+        for text in chat(user_input, stream=True):
+            print(text, end="")
+        print()
+
+except KeyboardInterrupt:
+    print("\nBye!")
+
+```
