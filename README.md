@@ -21,7 +21,7 @@ bot = ChatBot()
 model = "gpt-3.5-turbo"
 
 # Get response from the ChatBot.
-response = bot.ask(UserMessage("Hello, how are you?"), model=model)
+response = bot.ask([UserMessage("Hello, how are you?")], model=model)
 
 # Print the response.
 print(response)
@@ -40,16 +40,18 @@ model = "gpt-3.5-turbo"
 user_message = UserMessage("Hello, how are you?")
 
 # Get response from the ChatBot.
-response = bot.ask(user_message, model=model)
+response = bot.ask([user_message], model=model)
 
 # Print the response.
 print(response)
 
 # Continue the conversation.
 new_user_message = UserMessage("What is your name?")
-conversation = [user_message, response, new_user_message]
+conversation = [user_message, AssistantMessage(response), new_user_message]
 
 new_response = bot.ask(conversation, model=model)
+
+print(new_response)
 ```
 
 ### ChatBot with more options
